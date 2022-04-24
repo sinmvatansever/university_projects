@@ -1,0 +1,76 @@
+String a_str;
+String b_str;
+String c_str;
+String islem;
+int a;
+int b;
+int c;
+int sonuc = 0;
+int x;
+
+void setup()
+{
+  //SERIAL COMMUNICATION BEGIN (TO GET USER INPUTS)
+    Serial.begin(9600); 
+}
+
+void loop()
+{ 
+    x = 0; // ITERATION COUNT  
+    Serial.println("Enter First Number");
+    while(x<3){ //LISTEN FUNCTION TO GET FIRST NUMBER FROM USER
+      if(x == 0){
+        while (Serial.available() > 0) {
+           a_str = Serial.readString(); //READ DATA COMES FROM SERIAL COMMUNICATION PORT
+           if(a_str.length() == 3){
+             a = a_str.toInt(); // CONVERT USER INPUT TO REAL NUMBER VALUE
+             Serial.println("Enter Second Number");
+             x++;  
+           } else {
+             Serial.println("Enter a 3 digit  number");          
+           }
+         }
+       } 
+            
+            
+   //LISTEN FUNCTION TO GET SECOND NUMBER FROM USER
+      else if(x == 1){
+        while (Serial.available() > 0) {
+          b_str = Serial.readString();//READ DATA COMES FROM SERIAL COMMUNICATION PORT
+          if(b_str.length() == 3){
+            b = b_str.toInt();
+            Serial.println("Enter an operation");
+             x++;
+          } else {
+            Serial.println("Enter a 3 digit  number");          
+          }
+        } 
+      }
+            
+            
+   //LISTEN FUNCTION TO GET OPERATOR FROM USER
+        else{
+          while (Serial.available() > 0) {
+            c_str = Serial.readString();//READ DATA COMES FROM SERIAL COMMUNICATION PORT
+			c = c_str.charAt(0);
+            if(c == '+')
+              sonuc = a+b;
+            else if(c == '-')
+              sonuc = a-b;
+            else if(c == '*')
+              sonuc = a*b;
+            else if(c == '/')
+              sonuc = a/b;
+            else
+              Serial.println("Enter a valid operator");
+
+           if(sonuc > 0)
+              x++;}
+        }
+    }
+
+    Serial.print("Result is:");
+	Serial.println(sonuc);
+}//END OF LOOP
+
+

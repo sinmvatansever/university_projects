@@ -1,0 +1,43 @@
+#include <Servo.h>
+int temp_sensor = A5;
+int led = 4;
+int T;
+float volt;
+float temp;
+Servo mainServo;
+int position =0;
+int previousposition;
+
+
+void setup()
+{
+  pinMode(temp_sensor, INPUT);
+  pinMode(led, OUTPUT);
+  mainServo.attach(6);
+  
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  T = analogRead(temp_sensor);//READ DATA FROM TEMPERATURE SENSOR
+  volt = T*5;
+  volt /= 1024;
+  temp = (volt-0.5)*100;//TEMPERATURE VALUE
+
+  position = map(temp,-40,125,0,180);//maps the position from -40 celcius to 125 celcius temperature value and change the position between 0-180 degrees.
+  Serial.println(position);
+  if (previousposition != position){
+    mainServo.write(position);
+    digitalWrite(led,HIGH);
+    delay(1000);}
+  else{
+    digitalWrite(led,LOW);}
+  
+  
+  previousposition = position;
+ 
+  Serial.println(temp);
+  delay(1000);
+
+}

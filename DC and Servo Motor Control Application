@@ -1,0 +1,118 @@
+#include <Servo.h>
+#include <LiquidCrystal.h>
+
+// For servo
+Servo mainServo;
+int position;
+
+
+// For motion sensor
+int motion_1;
+int motion_2;
+int motion_3;
+int pir_1 = 10;
+int pir_2 = 9;
+int pir_3 = 8;
+
+// For lcd
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+//For switches
+int button_1 = 7;
+int button_2 = 13;
+int buttonstate_1;
+int buttonstate_2;
+
+//For H bridge 
+int inH_3 = A5;
+int inH_4 = A4;
+int A;
+int B;
+
+void setup()
+{
+  pinMode(button_1,INPUT);
+  pinMode(button_2,INPUT);
+  
+  mainServo.attach(6);
+  
+  pinMode(pir_1,INPUT);
+  pinMode(pir_2,INPUT);
+  pinMode(pir_3,INPUT);
+  
+  lcd.begin(16,2);
+
+  pinMode(inH_3,OUTPUT);
+  pinMode(inH_4,OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  buttonstate_1 = digitalRead(button_1);
+  motion_1 = digitalRead(pir_1);
+  motion_2 = digitalRead(pir_2);
+  motion_3 = digitalRead(pir_3);
+  if (buttonstate_1==LOW){
+    buttonstate_2 = digitalRead(button_2);
+    //TURNS RIGHT
+    if (buttonstate_2 == HIGH) {
+      analogWrite(inH_3,0);
+      analogWrite(inH_4,255);
+      lcd.clear();
+  	  lcd.print("DC MOTOR ACTIVE");
+  	  lcd.setCursor(0,1);
+      lcd.print("Direction:RIGHT");
+      delay(5000);
+    }
+    //TURNS LEFT
+    else {
+      analogWrite(inH_3,255);
+      analogWrite(inH_4,0);
+      lcd.clear();
+  	  lcd.print("DC MOTOR ACTIVE");
+  	  lcd.setCursor(0,1);
+      lcd.print("Direction:LEFT");
+      delay(5000);}}
+  
+  else {
+    if (motion_1 == HIGH){
+      position = 0;
+      mainServo.write(position);
+      lcd.clear();
+  	  lcd.print("SERVO ACTIVE");
+  	  lcd.setCursor(0,1);
+      lcd.print("Angle:0 DEGREE");
+      delay(5000);}
+    
+    else if (motion_2 == HIGH){
+      position = 90;
+      mainServo.write(position);
+      lcd.clear();
+  	  lcd.print("SERVO ACTIVE");
+  	  lcd.setCursor(0,1);
+      lcd.print("Angle:90 DEGREE");
+      delay(5000);}
+    
+    else if (motion_3 == HIGH){
+      position = 180;
+      mainServo.write(position);
+      lcd.clear();
+  	  lcd.print("SERVO ACTIVE");
+  	  lcd.setCursor(0,1);
+      lcd.print("Angle:180 DEGREE");
+      delay(5000);}
+    else{
+    position = 0;
+    analogWrite(inH_3,0);
+    analogWrite(inH_4,0);
+    mainServo.write(position);
+    lcd.clear();
+  	lcd.print("SERVO ACTIVE");
+  	lcd.setCursor(0,1);
+    lcd.print("ANGLE:0 DEGREE");
+    delay(2000);
+    }
+  }
+  
+}
